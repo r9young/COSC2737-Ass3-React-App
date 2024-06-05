@@ -23,10 +23,8 @@ jobs:
     runs-on: self-hosted 
     steps:
       - name: Pull image from docker hub
-        run: docker pull r9young777/reactjs-app:latest 
+        run: docker pull integrationninjas/reactjs-app:latest 
       - name: Delete old container
         run: docker rm -f reactjs-app-container
       - name: Run Docker Container
-        run: sudo docker run -d -p 3000:80 --name reactjs-app-container -e MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }} r9young777/reactjs-app:latest
-
-
+        run: docker run -d -p 3000:80 --name reactjs-app-container integrationninjas/reactjs-app

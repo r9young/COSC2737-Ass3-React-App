@@ -20,7 +20,7 @@ jobs:
  
   deploy:
     needs: build
-    runs-on: self-hosted 
+    runs-on: [self-hosted, react]
     steps:
       - name: Pull image from docker hub
         run: docker pull r9young777/reactjs-app:latest 

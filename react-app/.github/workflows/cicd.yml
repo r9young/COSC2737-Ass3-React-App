@@ -20,11 +20,11 @@ jobs:
  
   deploy:
     needs: build
-    runs-on: self-hosted 
+    runs-on: self-hosted
     steps:
       - name: Pull image from docker hub
-        run: docker pull integrationninjas/reactjs-app:latest 
+        run: sudo docker pull r9young777/reactjs-app:latest 
       - name: Delete old container
         run: docker rm -f reactjs-app-container
       - name: Run Docker Container
-        run: docker run -d -p 3000:80 --name reactjs-app-container integrationninjas/reactjs-app
+        run: sudo docker run -d -p 3000:80 --name reactjs-app-container r9young777/reactjs-app

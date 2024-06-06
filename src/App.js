@@ -36,21 +36,21 @@ function App() {
       <div className='container'>
         <div className="row">
           <div className="col">
-            <h3 className="text-center">Users List</h3>
+            {/* <h3 className="text-center">Users List</h3> */}
             <ul>
               {recordData.map((r, i) => <tl key={i}><DetailsCardComponent email={r.email} sn={i+1} userN={r.name} /></tl>)}
             </ul>
           </div>
           <div className="col">
-            <h2>Add Users</h2>
+            <h2>Registration</h2>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label for="exampleInputUser">User Name</label>
                 <input type="text" name="name" className="form-control" id="exampleInputUser" value={formData.name} onChange={handleChange} placeholder="Enter user name" />
               </div>
               <div className="form-group">
-                <label for="exampleInputEmail">Email</label>
-                <input type="email" name="email" className="form-control" id="exampleInputEmail" value={formData.email} onChange={handleChange} placeholder="Enter email" />
+                <label for="exampleInputEmail">Password</label>
+                <input type="email" name="email" className="form-control" id="exampleInputEmail" value={formData.email} onChange={handleChange} placeholder="Enter password" />
               </div>
               <button type="submit" className="btn btn-primary mt-2">Submit</button>
             </form>

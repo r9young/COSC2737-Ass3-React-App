@@ -1,7 +1,6 @@
-
-import DetailsCardComponent from "./components/DetailsCardComponent";
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
+import DetailsCardComponent from "./components/DetailsCardComponent";
 
 function App() {
   const [formData, setFormData] = useState({ name: "", email: "" });
@@ -12,14 +11,11 @@ function App() {
   console.log("process.env.REACT_APP_SERVER_BASE_URL:", process.env.REACT_APP_SERVER_BASE_URL);
   const base_url = process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_BASE_URL : process.env.REACT_APP_SERVER_BASE_URL;
 
-//   useEffect(() => {
-//     axios.get(`${base_url}/getUser`).then(res => { setRecordData(res.data) }).catch(err => alert(`Some error occured ==>${err}`));
-//    }, []);
   useEffect(() => {
-        axios.get(`${base_url.replace(/\/$/, "")}/getUser`).then(res => {
-        setRecordData(res.data);
-        }).catch(err => alert(`Some error occurred ==> ${err}`));
-  }, []);
+    axios.get(`${base_url.replace(/\/$/, "")}/getUser`).then(res => {
+      setRecordData(res.data);
+    }).catch(err => alert(`Some error occurred ==> ${err}`));
+  }, [base_url]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -28,14 +24,17 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    axios.post(`${base_url}/addUser`, formData).then(res => { setFormData({ name: "", email: "" }); alert("User created successfully") }).catch(err => alert(`Some error occured ==>${err}`));
+    axios.post(`${base_url.replace(/\/$/, "")}/addUser`, formData).then(res => {
+      setFormData({ name: "", email: "" });
+      alert("User created successfully");
+    }).catch(err => alert(`Some error occurred ==> ${err}`));
   };
 
   return (
     <div className="App">
       <nav className="navbar navbar-light bg-light mb-2">
         <a className="navbar-brand" href="https://www.youtube.com/@IntegrationNinjas">
-          <img src="./logo_p.png" width="50" height="50" class="d-inline-block" alt="" />
+          <img src="./logo_p.png" width="50" height="50" className="d-inline-block" alt="" />
           Easy Talk
         </a>
       </nav>
@@ -44,14 +43,14 @@ function App() {
           <div className="col">
             <h3 className="text-center">Users List</h3>
             <ul>
-              {recordData.map((r, i) => <tl key={i}><DetailsCardComponent email={r.email} sn={i+1} userN={r.name} /></tl>)}
+              {recordData.map((r, i) => <li key={i}><DetailsCardComponent email={r.email} sn={i + 1} userN={r.name} /></li>)}
             </ul>
           </div>
           <div className="col">
             <h2>Add Users</h2>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
-                <label for="exampleInputUser">User Name</label>
+                <label htmlFor="exampleInputUser">User Name</label>
                 <input type="text" name="name" className="form-control" id="exampleInputUser" value={formData.name} onChange={handleChange} placeholder="Enter user name" />
               </div>
               <div className="form-group">

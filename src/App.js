@@ -72,16 +72,14 @@ function App() {
   const [formData, setFormData] = useState({ name: "", email: "" });
   const [recordData, setRecordData] = useState([]);
 
-  console.log("process.env:", process.env);
-  console.log("process.env.REACT_APP_NODE_ENV:", process.env.REACT_APP_NODE_ENV);
-  console.log("process.env.REACT_APP_SERVER_BASE_URL:", process.env.REACT_APP_SERVER_BASE_URL);
-  
   const base_url = process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_BASE_URL : process.env.REACT_APP_SERVER_BASE_URL;
 
   useEffect(() => {
-    axios.get(`${base_url}/getUsers`).then(res => { 
-      setRecordData(res.data);
-    }).catch(err => alert(`Some error occurred ==> ${err}`));
+    axios.get(`${base_url}/getUsers`)
+      .then(res => {
+        setRecordData(res.data);
+      })
+      .catch(err => alert(`Some error occurred: ${err}`));
   }, [base_url]);
 
   const handleChange = (event) => {
@@ -91,26 +89,32 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    axios.post(`${base_url}/addUser`, formData).then(res => { 
-      setFormData({ name: "", email: "" });
-      alert("User created successfully");
-    }).catch(err => alert(`Some error occurred ==> ${err}`));
+    axios.post(`${base_url}/addUser`, formData)
+      .then(res => {
+        setFormData({ name: "", email: "" });
+        alert("User created successfully");
+      })
+      .catch(err => alert(`Some error occurred: ${err}`));
   };
 
   return (
     <div className="App">
       <nav className="navbar navbar-light bg-light mb-2">
         <a className="navbar-brand" href="https://www.youtube.com/@IntegrationNinjas">
-          <img src="./logo_p.png" width="50" height="50" className="d-inline-block" alt="" />
+          <img src="./logo_p.png" width="50" height="50" className="d-inline-block" alt="Easy Talk Logo" />
           Easy Talk
         </a>
       </nav>
-      <div className='container'>
+      <div className="container">
         <div className="row">
           <div className="col">
             <h3 className="text-center">Users List</h3>
             <ul>
-              {recordData.map((r, i) => <li key={i}><DetailsCardComponent email={r.email} sn={i+1} userN={r.name} /></li>)}
+              {recordData.map((r, i) => (
+                <li key={i}>
+                  <DetailsCardComponent email={r.email} sn={i + 1} userN={r.name} />
+                </li>
+              ))}
             </ul>
           </div>
           <div className="col">
@@ -118,11 +122,27 @@ function App() {
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="exampleInputUser">User Name</label>
-                <input type="text" name="name" className="form-control" id="exampleInputUser" value={formData.name} onChange={handleChange} placeholder="Enter user name" />
+                <input
+                  type="text"
+                  name="name"
+                  className="form-control"
+                  id="exampleInputUser"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter user name"
+                />
               </div>
               <div className="form-group">
                 <label htmlFor="exampleInputEmail">Email</label>
-                <input type="email" name="email" className="form-control" id="exampleInputEmail" value={formData.email} onChange={handleChange} placeholder="Enter email" />
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  id="exampleInputEmail"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter email"
+                />
               </div>
               <button type="submit" className="btn btn-primary mt-2">Submit</button>
             </form>

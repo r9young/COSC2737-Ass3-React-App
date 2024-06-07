@@ -16,7 +16,7 @@ function App() {
   // }, []);
 
   useEffect(() => {
-    axios.get(`${base_url}/getusers`).then(res => { setRecordData(res.data) }).catch(err => alert(`Some error occured ==>${err}`));
+    axios.get(`${base_url}/getUsers`).then(res => { setRecordData(res.data) }).catch(err => alert(`Some error occured ==>${err}`));
    }, []);
 
   const handleChange = (event) => {
@@ -26,7 +26,7 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    axios.post(`${base_url}/adduser`, formData).then(res => { setFormData({ name: "", email: "" }); alert("User created successfully") }).catch(err => alert(`Some error occured ==>${err}`));
+    axios.post(`${base_url}/addUser`, formData).then(res => { setFormData({ name: "", email: "" }); alert("User created successfully") }).catch(err => alert(`Some error occured ==>${err}`));
   };
 
   return (

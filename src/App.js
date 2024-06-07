@@ -1,3 +1,4 @@
+
 import DetailsCardComponent from "./components/DetailsCardComponent";
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -10,12 +11,14 @@ function App() {
   console.log("process.env.REACT_APP_NODE_ENV:", process.env.REACT_APP_NODE_ENV);
   console.log("process.env.REACT_APP_SERVER_BASE_URL:", process.env.REACT_APP_SERVER_BASE_URL);
   const base_url = process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_BASE_URL : process.env.REACT_APP_SERVER_BASE_URL;
-  
-  
+
+//   useEffect(() => {
+//     axios.get(`${base_url}/getUser`).then(res => { setRecordData(res.data) }).catch(err => alert(`Some error occured ==>${err}`));
+//    }, []);
   useEffect(() => {
-    axios.get(`${base_url.replace(/\/$/, "")}/getUser`).then(res => {
-    setRecordData(res.data);
-    }).catch(err => alert(`Some error occurred ==> ${err}`));
+        axios.get(`${base_url.replace(/\/$/, "")}/getUser`).then(res => {
+        setRecordData(res.data);
+        }).catch(err => alert(`Some error occurred ==> ${err}`));
   }, []);
 
   const handleChange = (event) => {
@@ -31,9 +34,9 @@ function App() {
   return (
     <div className="App">
       <nav className="navbar navbar-light bg-light mb-2">
-        <a class="navbar-brand" href="https://www.youtube.com/@IntegrationNinjas">
+        <a className="navbar-brand" href="https://www.youtube.com/@IntegrationNinjas">
           <img src="./logo_p.png" width="50" height="50" class="d-inline-block" alt="" />
-          Integration Ninja
+          Easy Talk
         </a>
       </nav>
       <div className='container'>
@@ -52,7 +55,7 @@ function App() {
                 <input type="text" name="name" className="form-control" id="exampleInputUser" value={formData.name} onChange={handleChange} placeholder="Enter user name" />
               </div>
               <div className="form-group">
-                <label for="exampleInputEmail">Email</label>
+                <label htmlFor="exampleInputEmail">Email</label>
                 <input type="email" name="email" className="form-control" id="exampleInputEmail" value={formData.email} onChange={handleChange} placeholder="Enter email" />
               </div>
               <button type="submit" className="btn btn-primary mt-2">Submit</button>

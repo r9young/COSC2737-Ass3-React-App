@@ -28,7 +28,7 @@ function App() {
   return (
     <div className="App">
       <nav className="navbar navbar-light bg-light mb-2">
-        <a class="navbar-brand" href="https://www.youtube.com/@IntegrationNinjas">
+        <a className="navbar-brand" href="https://www.youtube.com/@IntegrationNinjas">
           <img src="./logo_p.png" width="50" height="50" class="d-inline-block" alt="" />
           Easy Talk
         </a>
@@ -49,7 +49,7 @@ function App() {
                 <input type="text" name="name" className="form-control" id="exampleInputUser" value={formData.name} onChange={handleChange} placeholder="Enter user name" />
               </div>
               <div className="form-group">
-                <label for="exampleInputEmail">Email</label>
+                <label htmlFor="exampleInputEmail">Email</label>
                 <input type="email" name="email" className="form-control" id="exampleInputEmail" value={formData.email} onChange={handleChange} placeholder="Enter email" />
               </div>
               <button type="submit" className="btn btn-primary mt-2">Submit</button>

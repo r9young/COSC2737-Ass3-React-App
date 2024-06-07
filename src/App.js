@@ -26,7 +26,7 @@ function App() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    axios.post(`${base_url}/addUser`, formData).then(res => { setFormData({ name: "", email: "" }); alert("User created successfully") }).catch(err => alert(`Some error occured ==>${err}`));
+    axios.post(`${base_url}/adduser`, formData).then(res => { setFormData({ name: "", email: "" }); alert("User created successfully") }).catch(err => alert(`Some error occured ==>${err}`));
   };
 
   return (

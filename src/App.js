@@ -28,29 +28,29 @@ function App() {
   return (
     <div className="App">
       <nav className="navbar navbar-light bg-light mb-2">
-        {/* <a class="navbar-brand" href="https://www.youtube.com/@IntegrationNinjas">
+        <a class="navbar-brand" href="https://www.youtube.com/@IntegrationNinjas">
           <img src="./logo_p.png" width="50" height="50" class="d-inline-block" alt="" />
-          Integration Ninja
-        </a> */}
+          Easy Talk
+        </a>
       </nav>
       <div className='container'>
         <div className="row">
           <div className="col">
-            {/* <h3 className="text-center">Users List</h3> */}
+            <h3 className="text-center">Users List</h3>
             <ul>
               {recordData.map((r, i) => <tl key={i}><DetailsCardComponent email={r.email} sn={i+1} userN={r.name} /></tl>)}
             </ul>
           </div>
           <div className="col">
-            <h2>Registration</h2>
+            <h2>Add Users</h2>
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label for="exampleInputUser">User Name</label>
                 <input type="text" name="name" className="form-control" id="exampleInputUser" value={formData.name} onChange={handleChange} placeholder="Enter user name" />
               </div>
               <div className="form-group">
-                <label for="exampleInputEmail">Password</label>
-                <input type="email" name="email" className="form-control" id="exampleInputEmail" value={formData.email} onChange={handleChange} placeholder="Enter password" />
+                <label for="exampleInputEmail">Email</label>
+                <input type="email" name="email" className="form-control" id="exampleInputEmail" value={formData.email} onChange={handleChange} placeholder="Enter email" />
               </div>
               <button type="submit" className="btn btn-primary mt-2">Submit</button>
             </form>

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - mern-ec2-docker
+      # The pipeline is triggered by a push to the mern-ec2-docker branch.
 
 jobs:
   build:

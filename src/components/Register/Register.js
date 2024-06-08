@@ -17,17 +17,23 @@ function App() {
   console.log("process.env.REACT_APP_NODE_ENV:", process.env.REACT_APP_NODE_ENV);
   console.log("process.env.REACT_APP_SERVER_BASE_URL:", process.env.REACT_APP_SERVER_BASE_URL);
   
-  const base_url = process.env.REACT_APP_NODE_ENV === 'development'
+  const base_url = process.env.REACT_APP_NODE_ENV === 'development' //see .env
     ? process.env.REACT_APP_LOCAL_BASE_URL
     : process.env.REACT_APP_SERVER_BASE_URL;
 
   // ############################################################################
+
+  // Fetching Users with useEffect
 
   useEffect(() => {
     axios.get(`${base_url.replace(/\/$/, "")}/getUser`).then(res => {
       console.log(res.data);
     }).catch(err => alert(`Some error occurred ==> ${err}`));
   }, [base_url]);
+
+  // ###########################################################################
+
+  // handle input change
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -42,6 +48,10 @@ function App() {
       );
     }
   };
+
+  // ###########################################################################
+
+  // Handling Form Submission
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -64,6 +74,8 @@ function App() {
       })
       .catch(err => alert(`Some error occurred ==> ${err}`));
   };
+
+  // ###########################################################################
 
   return (
     <div className="App">

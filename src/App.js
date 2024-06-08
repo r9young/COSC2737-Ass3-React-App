@@ -22,7 +22,7 @@ function App() {
   const handleLoginSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('/api/login', loginData);
+      const response = await axios.post('http://localhost:3001/api/login', loginData);
       if (response.data.success) {
         navigate('/chat');
       } else {

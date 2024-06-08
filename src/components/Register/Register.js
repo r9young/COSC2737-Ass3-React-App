@@ -11,6 +11,8 @@ function App() {
   });
   const [passwordMatch, setPasswordMatch] = useState(true);
 
+  // ############################################################################
+
   console.log("process.env:", process.env);
   console.log("process.env.REACT_APP_NODE_ENV:", process.env.REACT_APP_NODE_ENV);
   console.log("process.env.REACT_APP_SERVER_BASE_URL:", process.env.REACT_APP_SERVER_BASE_URL);
@@ -18,6 +20,8 @@ function App() {
   const base_url = process.env.REACT_APP_NODE_ENV === 'development'
     ? process.env.REACT_APP_LOCAL_BASE_URL
     : process.env.REACT_APP_SERVER_BASE_URL;
+
+  // ############################################################################
 
   useEffect(() => {
     axios.get(`${base_url.replace(/\/$/, "")}/getUser`).then(res => {

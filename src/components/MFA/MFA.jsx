@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 const EnableMFA = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const userId = localStorage.getItem('userId'); // Get the userId from localStorage
 
   const enableMFA = async () => {
     try {
@@ -10,7 +11,7 @@ const EnableMFA = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId: '60d0fe4f5311236168a109ca' }), // Use a valid userId
+        body: JSON.stringify({ userId }), // Use the dynamic userId
       });
 
       if (!response.ok) {
@@ -27,7 +28,7 @@ const EnableMFA = () => {
 
   return (
     <div>
-      <button onClick={enableMFA}>Enable MFA</button>
+      <button onClick={enableMFA} disabled={!userId}>Enable MFA</button>
       {qrCodeUrl && <img src={qrCodeUrl} alt="QR Code" />}
     </div>
   );

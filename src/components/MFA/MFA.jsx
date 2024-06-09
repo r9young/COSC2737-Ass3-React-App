@@ -4,12 +4,7 @@ const Mfa = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState('');
 
   const enableMfa = async () => {
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-      alert('User ID not found. Please log in again.');
-      return;
-    }
-
+    const userId = localStorage.getItem('userId'); // Assuming you have a userId stored in localStorage
     try {
       const response = await fetch('http://13.54.65.192:4000/enable-mfa', {
         method: 'POST',

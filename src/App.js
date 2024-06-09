@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Route, Routes, Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Home from './components/Home';
@@ -13,11 +13,6 @@ function App() {
     password: ''
   });
   const [loginError, setLoginError] = useState('');
-
-  // Logging environment variables for debugging
-  console.log("process.env:", process.env);
-  console.log("process.env.REACT_APP_NODE_ENV:", process.env.REACT_APP_NODE_ENV);
-  console.log("process.env.REACT_APP_SERVER_BASE_URL:", process.env.REACT_APP_SERVER_BASE_URL);
 
   // Determine the base URL based on the environment
   const base_url = process.env.REACT_APP_NODE_ENV === 'development'
@@ -34,6 +29,8 @@ function App() {
     try {
       const response = await axios.post(`${base_url.replace(/\/$/, "")}/api/login`, loginData);
       if (response.data.success) {
+        localStorage.setItem('userId', response.data.userId); // Store the userId
+        localStorage.setItem('username', loginData.username); // Store the username
         navigate('/chat'); // Redirect to the chat page if login is successful
       } else {
         setLoginError('Invalid username or password'); // Display error message if login fails

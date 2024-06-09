@@ -2,6 +2,23 @@ import React from 'react';
 import './style.css'; // Ensure the path is correct
 
 export const Chat = () => {
+  const enableMfa = async () => {
+    const userId = localStorage.getItem('userId');
+    const response = await fetch('/enable-mfa', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId })
+    });
+
+    const result = await response.json();
+    if (result.qrCodeUrl) {
+      document.getElementById('qrCodeImage').src = result.qrCodeUrl;
+      document.getElementById('qrCodeContainer').style.display = 'block';
+    } else {
+      alert('Failed to generate QR code. Please try again.');
+    }
+  };
+
   return (
     <div className="chat">
       <div className="overlap-wrapper">
@@ -39,7 +56,8 @@ export const Chat = () => {
           <div className="isi-chat">
             {/* Uncomment the HomeHomeAltOutline1 import line in your actual code */}
             {/* <HomeHomeAltOutline1 className="home-home-alt" /> */}
-            <div className="text-wrapper-19">Switch Account</div>
+            {/* <div className="text-wrapper-19">Switch Account</div> */}
+            <button className="text-wrapper-19" id="enableMfaBtn" onClick={enableMfa}>Enable MFA</button>
             <div className="overlap-3">
               {/* Uncomment the FileFolderOpen1 import line in your actual code */}
               {/* <FileFolderOpen1 className="file-folder-open" /> */}
@@ -52,6 +70,10 @@ export const Chat = () => {
             {/* <div className="rectangle-4" /> */}
           </div>
         </div>
+      </div>
+      <div id="qrCodeContainer" style={{ display: 'none' }}>
+        <p>Scan this QR code with your Google Authenticator app:</p>
+        <img id="qrCodeImage" alt="QR Code" />
       </div>
     </div>
   );

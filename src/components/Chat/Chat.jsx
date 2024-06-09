@@ -1,29 +1,13 @@
 import React from 'react';
 import './style.css'; // Ensure the path is correct
+import { Link } from 'react-router-dom';
 
-export const Chat = () => {
-  const enableMfa = async () => {
-    const userId = localStorage.getItem('userId');
-    const response = await fetch('/enable-mfa', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ userId })
-    });
-
-    const result = await response.json();
-    if (result.qrCodeUrl) {
-      document.getElementById('qrCodeImage').src = result.qrCodeUrl;
-      document.getElementById('qrCodeContainer').style.display = 'block';
-    } else {
-      alert('Failed to generate QR code. Please try again.');
-    }
-  };
-
+const Chat = () => {
   return (
     <div className="chat">
       <div className="overlap-wrapper">
         <div className="overlap">
-          <div className="baground">
+          <div className="background">
             <div className="div" />
           </div>
           <div className="sebalah-kiri">
@@ -31,10 +15,8 @@ export const Chat = () => {
             <div className="text-wrapper-2">Smith</div>
             <div className="text-wrapper-3">Mary</div>
             <div className="text-wrapper-10">Recent Conversation</div>
-            <div className="overlap-group">
-            </div>
-            <div className="line-wrapper">
-            </div>
+            <div className="overlap-group"></div>
+            <div className="line-wrapper"></div>
             <div className="text-wrapper-12">John</div>
             <div className="rectangle-3" />
           </div>
@@ -49,31 +31,24 @@ export const Chat = () => {
           </div>
           <div className="buble-chat">
             <div className="text-wrapper-16">Cathy</div>
-            <p className="i-ask-again-if">
-              I ask again if
-            </p>
+            <p className="i-ask-again-if">I ask again if</p>
           </div>
           <div className="isi-chat">
-            {/* Uncomment the HomeHomeAltOutline1 import line in your actual code */}
-            {/* <HomeHomeAltOutline1 className="home-home-alt" /> */}
-            {/* <div className="text-wrapper-19">Switch Account</div> */}
-            <button className="text-wrapper-19" id="enableMfaBtn" onClick={enableMfa}>Enable MFA</button>
+            <div className="input-and-button">
+              <Link to="/mfa">
+                <button className="button">
+                  <label className="primary" htmlFor="input-1">
+                    Enable MFA
+                  </label>
+                </button>
+              </Link>
+            </div>
             <div className="overlap-3">
-              {/* Uncomment the FileFolderOpen1 import line in your actual code */}
-              {/* <FileFolderOpen1 className="file-folder-open" /> */}
               <div className="text-wrapper-20">Friend List</div>
             </div>
-            {/* <CommunicationMessageCircle1 className="communication" /> */}
-            {/* Uncomment the BrandApple1 import line in your actual code */}
-            {/* <BrandApple1 className="brand-apple" /> */}
             <div className="text-wrapper-21">CHAT</div>
-            {/* <div className="rectangle-4" /> */}
           </div>
         </div>
-      </div>
-      <div id="qrCodeContainer" style={{ display: 'none' }}>
-        <p>Scan this QR code with your Google Authenticator app:</p>
-        <img id="qrCodeImage" alt="QR Code" />
       </div>
     </div>
   );

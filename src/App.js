@@ -4,6 +4,7 @@ import axios from 'axios';
 import Home from './components/Home';
 import Register from './components/Register/Register';
 import Chat from './components/Chat/Chat';
+import Mfa from './components/MFA/MFA'; // Import the MFA component
 
 function App() {
   const location = useLocation();
@@ -14,7 +15,6 @@ function App() {
   });
   const [loginError, setLoginError] = useState('');
 
-  // Determine the base URL based on the environment
   const base_url = process.env.REACT_APP_NODE_ENV === 'development'
     ? process.env.REACT_APP_LOCAL_BASE_URL
     : process.env.REACT_APP_SERVER_BASE_URL;
@@ -105,6 +105,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/mfa" element={<Mfa />} /> {/* Add this line */}
           </Routes>
         )}
         <div className="text-wrapper-4">Welcome to Easy Chat</div>

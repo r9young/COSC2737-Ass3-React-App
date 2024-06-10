@@ -4,7 +4,7 @@ import axios from 'axios';
 import Home from './components/Home';
 import Register from './components/Register/Register';
 import Chat from './components/Chat/Chat';
-import Mfa from './components/MFA/MFA'; // Import the MFA component
+import OTPInput from './components/OTPInput/OTPInput';
 
 function App() {
   const location = useLocation();
@@ -14,6 +14,7 @@ function App() {
     password: ''
   });
   const [loginError, setLoginError] = useState('');
+  const [mfaSecret, setMfaSecret] = useState(null); // State for MFA Secret
 
   const base_url = process.env.REACT_APP_NODE_ENV === 'development'
     ? process.env.REACT_APP_LOCAL_BASE_URL
@@ -28,16 +29,39 @@ function App() {
     event.preventDefault();
     try {
       const response = await axios.post(`${base_url.replace(/\/$/, "")}/api/login`, loginData);
+      console.log('Login response:', response.data); // Log the server response
       if (response.data.success) {
         localStorage.setItem('userId', response.data.userId); // Store the userId
         localStorage.setItem('username', loginData.username); // Store the username
-        navigate('/chat'); // Redirect to the chat page if login is successful
+        setMfaSecret(response.data.mfaSecret || null); // Set MFA secret if available
+        console.log('MFA Secret:', response.data.mfaSecret); // Log MFA secret
+        if (!response.data.mfaSecret) {
+          navigate('/chat'); // Redirect to the chat page if MFA is not required
+        }
       } else {
         setLoginError('Invalid username or password'); // Display error message if login fails
       }
     } catch (error) {
       console.error('Error logging in:', error);
       setLoginError('An error occurred during login'); // Display error message if there is an issue with the request
+    }
+  };
+
+  const handleOtpSubmit = async (otp) => {
+    try {
+      const response = await axios.post(`${base_url.replace(/\/$/, "")}/api/verify-otp`, {
+        otp,
+        userId: localStorage.getItem('userId')
+      });
+      console.log('OTP response:', response.data); // Log the OTP verification response
+      if (response.data.success) {
+        navigate('/chat'); // Redirect to chat page after successful OTP verification
+      } else {
+        setLoginError('Invalid OTP'); // Display error message if OTP verification fails
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      setLoginError('An error occurred during OTP verification'); // Display error message if there is an issue with the request
     }
   };
 
@@ -67,37 +91,41 @@ function App() {
               <div className="text-wrapper">Sign In</div>
               <div className="rectangle" />
             </div>
-            <form onSubmit={handleLoginSubmit} className="input-and-button">
-              <input
-                className="field"
-                id="input-1"
-                placeholder="username"
-                type="text"
-                name="username"
-                value={loginData.username}
-                onChange={handleLoginChange}
-              />
-              <input
-                className="field"
-                id="input-2"
-                placeholder="password"
-                type="password"
-                name="password"
-                value={loginData.password}
-                onChange={handleLoginChange}
-              />
-              {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
-              <button className="button" type="submit">
-                <label className="primary" htmlFor="input-1">
-                  Sign In
-                </label>
-              </button>
-              <button className="button">
-                <label className="primary" htmlFor="input-1">
-                  Reset Forget Password
-                </label>
-              </button>
-            </form>
+            {!mfaSecret ? (
+              <form onSubmit={handleLoginSubmit} className="input-and-button">
+                <input
+                  className="field"
+                  id="input-1"
+                  placeholder="username"
+                  type="text"
+                  name="username"
+                  value={loginData.username}
+                  onChange={handleLoginChange}
+                />
+                <input
+                  className="field"
+                  id="input-2"
+                  placeholder="password"
+                  type="password"
+                  name="password"
+                  value={loginData.password}
+                  onChange={handleLoginChange}
+                />
+                {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+                <button className="button" type="submit">
+                  <label className="primary" htmlFor="input-1">
+                    Sign In
+                  </label>
+                </button>
+                <button className="button">
+                  <label className="primary" htmlFor="input-1">
+                    Reset Forget Password
+                  </label>
+                </button>
+              </form>
+            ) : (
+              <OTPInput onSubmit={handleOtpSubmit} />
+            )}
           </div>
         )}
         {location.pathname !== '/' && (
@@ -105,7 +133,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/chat" element={<Chat />} />
-            <Route path="/mfa" element={<Mfa />} /> {/* Add this line */}
           </Routes>
         )}
         <div className="text-wrapper-4">Welcome to Easy Chat</div>

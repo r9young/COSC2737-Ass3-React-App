@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import './style.css'; // Ensure the path is correct
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
+import './style.css';
 import axios from 'axios';
+import { io } from 'socket.io-client';
 
 const Chat = () => {
   const [users, setUsers] = useState([]);
@@ -10,7 +11,8 @@ const Chat = () => {
   const [newMessage, setNewMessage] = useState('');
   const [conversationId, setConversationId] = useState(null);
 
-  const userId = localStorage.getItem('userId'); // Get logged-in user's ID
+  const userId = localStorage.getItem('userId');
+  const socketRef = useRef();
 
   useEffect(() => {
     if (!userId) {
@@ -21,7 +23,7 @@ const Chat = () => {
     const fetchUsers = async () => {
       try {
         const response = await axios.get('http://13.54.65.192:4000/getUser');
-        console.log('Users fetched:', response.data); // Debugging line
+        console.log('Users fetched:', response.data);
         setUsers(response.data);
       } catch (error) {
         console.error('Error fetching users:', error);
@@ -29,10 +31,24 @@ const Chat = () => {
     };
 
     fetchUsers();
+
+    socketRef.current = io('http://13.54.65.192:4000');
+
+    socketRef.current.on('connect', () => {
+      console.log('Connected to socket server');
+    });
+
+    socketRef.current.on('newMessage', (message) => {
+      setMessages((prevMessages) => [...prevMessages, message]);
+    });
+
+    return () => {
+      socketRef.current.disconnect();
+    };
   }, [userId]);
 
   const startConversation = async (user) => {
-    console.log('User clicked:', user); // Log the clicked user
+    console.log('User clicked:', user);
     if (!userId || !user._id) {
       console.error('User ID is null');
       return;
@@ -43,8 +59,11 @@ const Chat = () => {
       const response = await axios.post('http://13.54.65.192:4000/api/conversations', {
         participants: [userId, user._id]
       });
-      setConversationId(response.data.conversationId);
-      fetchMessages(response.data.conversationId);
+      const newConversationId = response.data.conversationId; // Ensure we get the conversation ID
+      console.log('New conversation ID:', newConversationId); // Log the new conversation ID
+      setConversationId(newConversationId);
+      fetchMessages(newConversationId);
+      socketRef.current.emit('joinRoom', newConversationId);
     } catch (error) {
       console.error('Error starting conversation:', error);
     }
@@ -53,7 +72,7 @@ const Chat = () => {
   const fetchMessages = async (conversationId) => {
     try {
       const response = await axios.get(`http://13.54.65.192:4000/api/conversations/${conversationId}/messages`);
-      console.log('Messages fetched:', response.data.messages); // Debugging line
+      console.log('Messages fetched:', response.data.messages);
       setMessages(response.data.messages);
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -62,13 +81,17 @@ const Chat = () => {
 
   const sendMessage = async () => {
     if (!newMessage.trim()) return;
+    if (!conversationId) {
+      console.error('Conversation ID is null');
+      return;
+    }
 
     try {
       await axios.post(`http://13.54.65.192:4000/api/conversations/${conversationId}/messages`, {
         senderId: userId,
         text: newMessage
       });
-      fetchMessages(conversationId);
+      socketRef.current.emit('sendMessage', { conversationId, senderId: userId, text: newMessage });
       setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);

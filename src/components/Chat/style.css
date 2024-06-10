@@ -4,21 +4,19 @@
 }
 
 .user-list {
-  width: 200px;
+  width: 25%;
   border-right: 1px solid #ccc;
-  padding: 10px;
-  overflow-y: auto;
+  padding: 20px;
 }
 
-.user-list .list-title {
-  font-weight: bold;
+.list-title {
+  font-size: 1.2em;
   margin-bottom: 10px;
 }
 
 .user-item {
   cursor: pointer;
-  padding: 5px;
-  margin: 5px 0;
+  padding: 10px;
   border-bottom: 1px solid #eee;
 }
 
@@ -26,58 +24,66 @@
   background-color: #f1f1f1;
 }
 
-.conversation-window {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.conversation-header {
-  background-color: #f1f1f1;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
-
-.conversation-header .header-title {
-  font-weight: bold;
-}
-
-.conversation-content {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
-}
-
-.conversation-content .my-message {
-  text-align: right;
-  margin: 5px 0;
-}
-
-.conversation-content .their-message {
-  text-align: left;
-  margin: 5px 0;
-}
-
-.conversation-input {
-  display: flex;
-  padding: 10px;
-  border-top: 1px solid #ccc;
-}
-
-.conversation-input input {
-  flex: 1;
-  padding: 10px;
-  margin-right: 10px;
-}
-
-.conversation-input button {
-  padding: 10px;
-}
-
 .mfa-button {
   margin-top: 20px;
 }
 
-.mfa-button button {
+.conversation-window {
+  width: 75%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.conversation-header {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.conversation-content {
+  flex-grow: 1;
+  border: 1px solid #ccc;
   padding: 10px;
+  overflow-y: auto;
+}
+
+.my-message, .their-message {
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.my-message {
+  background-color: #e1ffc7;
+  align-self: flex-end;
+}
+
+.their-message {
+  background-color: #f1f1f1;
+}
+
+.conversation-input {
+  display: flex;
+}
+
+.conversation-input input {
+  flex-grow: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-right: none;
+  border-radius: 5px 0 0 5px;
+}
+
+.conversation-input button {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-left: none;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+
+.conversation-input button:hover {
+  background-color: #45a049;
 }

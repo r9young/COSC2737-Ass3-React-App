@@ -4,6 +4,7 @@ import axios from 'axios';
 import Home from './components/Home';
 import Register from './components/Register/Register';
 import Chat from './components/Chat/Chat';
+import MFA from './components/MFA/MFA'; // Import the MFA component
 import OTPInput from './components/OTPInput/OTPInput';
 
 function App() {
@@ -139,9 +140,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/chat" element={<Chat />} />
+            <Route path="/MFA" element={<MFA />} />
           </Routes>
         )}
-        <div className="text-wrapper-4">Welcome to Easy Chat</div>
+        {/* <div className="text-wrapper-4">Welcome to Easy Chat</div> */}
       </div>
     </div>
   );

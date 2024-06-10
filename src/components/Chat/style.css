@@ -1,541 +1,83 @@
-.chat {
-  background-color: #ffffff;
+.chat-container {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  width: 100%;
+  height: 100vh;
 }
 
-.chat .overlap-wrapper {
-  background-color: #ffffff;
-  height: 1024px;
-  width: 1440px;
+.user-list {
+  width: 200px;
+  border-right: 1px solid #ccc;
+  padding: 10px;
+  overflow-y: auto;
 }
 
-.chat .overlap {
-  height: 1024px;
-  position: relative;
+.user-list .list-title {
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-.chat .baground {
-  background-color: black;
-  height: 1024px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 1440px;
+.user-item {
+  cursor: pointer;
+  padding: 5px;
+  margin: 5px 0;
+  border-bottom: 1px solid #eee;
 }
 
-.chat .rectangle {
-  background-color: #c14545;
-  border-radius: 20px;
-  height: 1024px;
-  left: 0;
-  position: absolute;
-  top: 0;
-  width: 203px;
+.user-item:hover {
+  background-color: #f1f1f1;
 }
 
-.chat .div {
-  background-color: #ffffff;
-  border-radius: 15px;
-  height: 892px;
-  left: 235px;
-  position: absolute;
-  top: 112px;
-  width: 492px;
+.conversation-window {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
-.chat .sebalah-kiri {
-  height: 961px;
-  left: 251px;
-  position: absolute;
-  top: 43px;
-  width: 1173px;
+.conversation-header {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
 }
 
-.chat .text-wrapper {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 18px;
-  font-weight: 500;
-  left: 97px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 735px;
-  white-space: nowrap;
+.conversation-header .header-title {
+  font-weight: bold;
 }
 
-.chat .text-wrapper-2 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 18px;
-  font-weight: 700;
-  left: 97px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 638px;
-  white-space: nowrap;
+.conversation-content {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
 }
 
-.chat .text-wrapper-3 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 18px;
-  font-weight: 500;
-  left: 98px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 537px;
-  white-space: nowrap;
+.conversation-content .my-message {
+  text-align: right;
+  margin: 5px 0;
 }
 
-.chat .text-wrapper-4 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 9px;
-  font-weight: 300;
-  left: 440px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 353px;
+.conversation-content .their-message {
+  text-align: left;
+  margin: 5px 0;
 }
 
-.chat .text-wrapper-5 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 9px;
-  font-weight: 300;
-  left: 440px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 458px;
+.conversation-input {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ccc;
 }
 
-.chat .text-wrapper-6 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 9px;
-  font-weight: 300;
-  left: 440px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 737px;
+.conversation-input input {
+  flex: 1;
+  padding: 10px;
+  margin-right: 10px;
 }
 
-.chat .text-wrapper-7 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 9px;
-  font-weight: 300;
-  left: 440px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 640px;
+.conversation-input button {
+  padding: 10px;
 }
 
-.chat .text-wrapper-8 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 9px;
-  font-weight: 300;
-  left: 440px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 543px;
+.mfa-button {
+  margin-top: 20px;
 }
 
-.chat .text-wrapper-9 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 13px;
-  font-weight: 400;
-  left: 97px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 366px;
-  white-space: nowrap;
-}
-
-.chat .text-wrapper-10 {
-  color: #9f7878;
-  font-family: "Roboto", Helvetica;
-  font-size: 18px;
-  font-weight: 400;
-  left: 69px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 245px;
-  white-space: nowrap;
-}
-
-.chat .overlap-group {
-  border-radius: 15px;
-  height: 52px;
-  left: 17px;
-  position: absolute;
-  top: 121px;
-  width: 422px;
-}
-
-.chat .text-wrapper-11 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 13px;
-  font-weight: 400;
-  left: 52px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 18px;
-  white-space: nowrap;
-}
-
-.chat .edit-search-instance {
-  left: 6px !important;
-  top: 14px !important;
-}
-
-.chat .rectangle-2 {
-  background-color: #f5dbdb5e;
-  border-radius: 15px;
-  height: 52px;
-  left: 0;
-  mix-blend-mode: luminosity;
-  position: absolute;
-  top: 0;
-  width: 422px;
-}
-
-.chat .line-wrapper {
-  background-position: 50% 50%;
-  background-size: cover;
-  height: 1px;
-  left: 0;
-  position: absolute;
-  top: 272px;
-  width: 469px;
-}
-
-.chat .line {
-  height: 1px;
-  left: 3px;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  width: 225px;
-}
-
-.chat .text-wrapper-12 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 18px;
-  font-weight: 700;
-  left: 98px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 345px;
-  white-space: nowrap;
-}
-
-.chat .rectangle-3 {
-  background-color: #ffffff;
-  border-radius: 15px;
-  height: 892px;
-  left: 488px;
-  position: absolute;
-  top: 69px;
-  width: 659px;
-}
-
-.chat .user-instance {
-  left: 905px !important;
-}
-
-.chat .text-wrapper-13 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 24px;
-  font-weight: 400;
-  left: 961px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 10px;
-  white-space: nowrap;
-}
-
-.chat .coolicon {
-  height: 7px;
-  left: 1116px;
-  position: absolute;
-  top: 23px;
-  width: 12px;
-}
-
-.chat .sebelah-kanan {
-  height: 825px;
-  left: 745px;
-  position: absolute;
-  top: 157px;
-  width: 632px;
-}
-
-.chat .overlap-2 {
-  height: 38px;
-  left: 90px;
-  position: absolute;
-  top: 0;
-  width: 117px;
-}
-
-.chat .text-wrapper-14 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 18px;
-  font-weight: 400;
-  left: 10px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 17px;
-  white-space: nowrap;
-}
-
-.chat .text-wrapper-15 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 18px;
-  font-weight: 700;
-  left: 0;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 0;
-  white-space: nowrap;
-}
-
-.chat .smile-wrapper {
-  background-color: #dededeb8;
-  border-radius: 10px;
-  height: 46px;
-  left: 0;
-  position: absolute;
-  top: 779px;
-  width: 628px;
-}
-
-.chat .smile-instance {
-  height: 24px !important;
-  left: 12px !important;
-  position: absolute !important;
-  top: 11px !important;
-  width: 24px !important;
-}
-
-.chat .baground-2 {
-  background-color: #2cdf53;
-  border-radius: 4.5px;
-  height: 9px;
-  left: 820px;
-  position: absolute;
-  top: 193px;
-  width: 9px;
-}
-
-.chat .plane-instance {
-  height: 24px !important;
-  left: 1321px !important;
-  position: absolute !important;
-  top: 947px !important;
-  width: 24px !important;
-}
-
-.chat .buble-chat {
-  height: 405px;
-  left: 346px;
-  position: absolute;
-  top: 409px;
-  width: 340px;
-}
-
-.chat .how-about-yesterday {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 13px;
-  font-weight: 400;
-  left: 134px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 0;
-  white-space: nowrap;
-}
-
-.chat .text-wrapper-16 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 18px;
-  font-weight: 500;
-  left: 3px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 82px;
-  white-space: nowrap;
-}
-
-.chat .p {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 13px;
-  font-weight: 400;
-  left: 3px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 103px;
-  white-space: nowrap;
-}
-
-.chat .i-ask-again-if {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 13px;
-  font-weight: 400;
-  left: 0;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 175px;
-}
-
-.chat .text-wrapper-17 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 13px;
-  font-weight: 400;
-  left: 3px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 293px;
-  white-space: nowrap;
-}
-
-.chat .text-wrapper-18 {
-  color: #000000;
-  font-family: "Roboto", Helvetica;
-  font-size: 13px;
-  font-weight: 400;
-  left: 3px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 390px;
-  white-space: nowrap;
-}
-
-.chat .isi-chat {
-  height: 547px;
-  left: 0;
-  position: absolute;
-  top: 33px;
-  width: 196px;
-}
-
-.chat .home-home-alt {
-  height: 55px !important;
-  left: 8px !important;
-  position: absolute !important;
-  top: 269px !important;
-  width: 61px !important;
-}
-
-.chat .text-wrapper-19 {
-  /* color: white; */
-  font-family: "Rhodium Libre", Helvetica;
-  font-size: 18px;
-  font-weight: 400;
-  left: 69px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 283px;
-}
-
-.chat .overlap-3 {
-  height: 56px;
-  left: 19px;
-  position: absolute;
-  top: 377px;
-  width: 171px;
-}
-
-.chat .file-folder-open {
-  height: 56px !important;
-  left: 0 !important;
-  position: absolute !important;
-  top: 0 !important;
-  width: 61px !important;
-}
-
-.chat .text-wrapper-20 {
-  color: white;
-  font-family: "Rhodium Libre", Helvetica;
-  font-size: 18px;
-  font-weight: 400;
-  left: 57px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 15px;
-}
-
-.chat .communication {
-  height: 58px !important;
-  left: 20px !important;
-  position: absolute !important;
-  top: 489px !important;
-  width: 56px !important;
-}
-
-.chat .brand-apple {
-  height: 96px !important;
-  left: 48px !important;
-  position: absolute !important;
-  top: 0 !important;
-  width: 94px !important;
-}
-
-.chat .text-wrapper-21 {
-  color: white;
-  font-family: "Rhodium Libre", Helvetica;
-  font-size: 18px;
-  font-weight: 700;
-  left: 80px;
-  letter-spacing: 0;
-  line-height: normal;
-  position: absolute;
-  top: 501px;
-}
-
-.chat .rectangle-4 {
-  background-color: #c4c4c4;
-  height: 61px;
-  left: 0;
-  position: absolute;
-  top: 486px;
-  width: 8px;
+.mfa-button button {
+  padding: 10px;
 }

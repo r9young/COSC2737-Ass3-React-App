@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Routes, Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Home from './components/Home';
@@ -47,6 +47,8 @@ function App() {
     }
   };
 
+
+  
   const handleOtpSubmit = async (otp) => {
     try {
       const response = await axios.post(`${base_url.replace(/\/$/, "")}/api/verify-otp`, {
@@ -64,6 +66,10 @@ function App() {
       setLoginError('An error occurred during OTP verification'); // Display error message if there is an issue with the request
     }
   };
+
+  useEffect(() => {
+    console.log('Current MFA Secret state:', mfaSecret);
+  }, [mfaSecret]);
 
   return (
     <div className="auth">

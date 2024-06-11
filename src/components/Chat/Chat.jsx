@@ -1,165 +1,162 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import './style.css';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
+import './style.css'; // Import the CSS file for styling
+
+const socket = io('http://13.54.65.192:4000'); // Ensure this matches your server URL and port
 
 const Chat = () => {
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [conversations, setConversations] = useState([]);
+  const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [conversationId, setConversationId] = useState(null);
-  const [userDetails, setUserDetails] = useState({ _id: '', firstname: '', lastname: '' });
-
-  const username = localStorage.getItem('username');
-  const socketRef = useRef();
+  const [message, setMessage] = useState('');
+  const [userId] = useState('60d0fe4f5311236168a109cb'); // Replace with the actual logged-in user ID
 
   useEffect(() => {
-    if (!username) {
-      console.error('Username is not set in localStorage');
-      return;
-    }
-
-    const fetchUserDetails = async () => {
-      try {
-        const response = await axios.get(`http://13.54.65.192:4000/getUserByUsername/${username}`);
-        console.log('User details fetched:', response.data);
-        setUserDetails(response.data);
-      } catch (error) {
-        console.error('Error fetching user details:', error);
-      }
-    };
-
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get('http://13.54.65.192:4000/getUser');
-        console.log('Users fetched:', response.data);
-        // Filter out the current user from the list of users
-        const filteredUsers = response.data.filter(user => user.username !== username);
-        setUsers(filteredUsers);
-      } catch (error) {
+    // Fetch users
+    axios.get('http://13.54.65.192:4000/getUser')
+      .then(response => {
+        console.log('Users fetched:', response.data); // Debug log
+        setUsers(response.data);
+      })
+      .catch(error => {
         console.error('Error fetching users:', error);
-      }
-    };
+      });
 
-    fetchUserDetails();
-    fetchUsers();
+    // Fetch conversations
+    axios.get('http://13.54.65.192:4000/api/conversations')
+      .then(response => {
+        console.log('Conversations fetched:', response.data); // Debug log
+        setConversations(response.data.conversations);
+      })
+      .catch(error => {
+        console.error('Error fetching conversations:', error);
+      });
 
-    socketRef.current = io('http://13.54.65.192:4000');
-
-    socketRef.current.on('connect', () => {
-      console.log('Connected to socket server');
+    // Socket event listeners
+    socket.on('newMessage', (newMessage) => {
+      console.log('New message received:', newMessage); // Debug log
+      setMessages(prevMessages => [...prevMessages, newMessage]);
     });
 
-    socketRef.current.on('newMessage', (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
+    socket.on('messages', (fetchedMessages) => {
+      console.log('Fetched messages:', fetchedMessages); // Debug log
+      setMessages(fetchedMessages);
     });
 
     return () => {
-      socketRef.current.disconnect();
+      socket.off('newMessage');
+      socket.off('messages');
     };
-  }, [username]);
+  }, []);
 
-  const startConversation = async (user) => {
-    console.log('User clicked:', user);
-    const userId = userDetails._id;
-    if (!userId || !user._id) {
-      console.error('User ID is null');
-      return;
-    }
-    console.log('Starting conversation with:', user);
-    setSelectedUser(user);
-    try {
-      const response = await axios.post('http://13.54.65.192:4000/api/conversations', {
-        participants: [userId, user._id]
-      });
-      const newConversationId = response.data.conversationId;
-      setConversationId(newConversationId);
-      fetchMessages(newConversationId);
-      socketRef.current.emit('joinRoom', newConversationId);
-    } catch (error) {
-      console.error('Error starting conversation:', error);
-    }
+  const getUserById = (id) => {
+    const user = users.find(user => user._id === id);
+    return user ? user.username : 'Unknown User';
   };
 
-  const fetchMessages = async (conversationId) => {
-    try {
-      const response = await axios.get(`http://13.54.65.192:4000/api/conversations/${conversationId}/messages`);
-      console.log('Messages fetched:', response.data.messages);
-      setMessages(response.data.messages);
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-    }
+  const selectUser = (user) => {
+    console.log('User selected:', user); // Debug log
+    // Create or fetch conversation with the selected user
+    axios.post('http://13.54.65.192:4000/api/conversations', { participants: [userId, user._id] })
+      .then(response => {
+        const conversationId = response.data.conversationId;
+        setSelectedConversation(conversationId);
+        socket.emit('joinRoom', conversationId);
+        fetchMessages(conversationId);
+      })
+      .catch(error => {
+        console.error('Error creating/fetching conversation:', error);
+      });
   };
 
-  const sendMessage = async () => {
-    if (!newMessage.trim()) return;
-    if (!conversationId) {
-      console.error('Conversation ID is null');
+  const fetchMessages = (conversationId) => {
+    axios.get(`http://13.54.65.192:4000/api/conversations/${conversationId}/messages`)
+      .then(response => {
+        console.log('Messages fetched:', response.data.messages); // Debug log
+        setMessages(response.data.messages);
+      })
+      .catch(error => {
+        console.error('Error fetching messages:', error);
+      });
+  };
+
+  const sendMessage = () => {
+    if (!selectedConversation) {
+      console.error('No conversation selected');
       return;
     }
 
-    try {
-      await axios.post(`http://13.54.65.192:4000/api/conversations/${conversationId}/messages`, {
-        senderId: userDetails._id,
-        text: newMessage
+    const newMessage = {
+      senderId: userId,
+      text: message
+    };
+
+    axios.post(`http://13.54.65.192:4000/api/conversations/${selectedConversation}/messages`, newMessage)
+      .then(() => {
+        socket.emit('sendMessage', {
+          conversationId: selectedConversation,
+          ...newMessage
+        });
+        setMessage('');
+      })
+      .catch(error => {
+        console.error('Error sending message:', error);
       });
-      socketRef.current.emit('sendMessage', { conversationId, senderId: userDetails._id, text: newMessage });
-      setNewMessage('');
-    } catch (error) {
-      console.error('Error sending message:', error);
-    }
+  };
+
+  const selectConversation = (conversationId) => {
+    setSelectedConversation(conversationId);
+    socket.emit('joinRoom', conversationId);
+    fetchMessages(conversationId);
   };
 
   return (
-    <div className="chat-container">
-      <div className="chat-header">
-        <h2>Welcome, {userDetails.firstname} {userDetails.lastname}!</h2>
-      </div>
-      <div className="main-content">
-        <div className="user-list">
-          <p className="list-title">Friend's List</p>
-          {users.map((user) => (
-            <div
-              key={user._id}
-              className="user-item"
-              onClick={() => startConversation(user)}
-            >
-              {user.firstname} {user.lastname}
-            </div>
-          ))}
-          <div className="mfa-button">
-            <Link to="/mfa">
-              <button>
-                Enable MFA
-              </button>
-            </Link>
-          </div>
-        </div>
-        <div className="conversation-window">
-          <div className="conversation-header">
-            <p className="header-title">You are currently talking to:</p>
-            {selectedUser ? `${selectedUser.firstname} ${selectedUser.lastname}` : 'Select a user to chat'}
-          </div>
-          <div className="conversation-content">
-            {messages.map((msg, index) => (
-              <div key={index} className={msg.senderId === userDetails._id ? 'my-message' : 'their-message'}>
-                <div>{msg.senderId === userDetails._id ? 'You' : selectedUser ? selectedUser.firstname : 'Unknown'}</div>
-                <p>{msg.text}</p>
-              </div>
+    <div className="app-container">
+      <h1>Chat App</h1>
+      <div className="users-conversations">
+        <div>
+          <h2>Users</h2>
+          <ul>
+            {users.map(user => (
+              <li key={user._id} onClick={() => selectUser(user)}>
+                {user.username}
+              </li>
             ))}
-          </div>
-          <div className="conversation-input">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-              placeholder="Type your message here"
-            />
-            <button onClick={sendMessage}>Send</button>
-          </div>
+          </ul>
         </div>
+        <div>
+          <h2>Conversations</h2>
+          <ul>
+            {conversations.map(conv => (
+              <li key={conv._id} onClick={() => selectConversation(conv._id)}>
+                Conversation with {conv.participants.filter(p => p !== userId).map(p => getUserById(p)).join(', ')}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div className="chat-container">
+        <h2>Chat</h2>
+        {selectedConversation && (
+          <>
+            <div className="messages-box">
+              {messages.map((msg, index) => (
+                <p key={index}><strong>{getUserById(msg.senderId)}</strong>: {msg.text}</p>
+              ))}
+            </div>
+            <div className="input-box">
+              <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your message here"
+              />
+              <button onClick={sendMessage}>Send</button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

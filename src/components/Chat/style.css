@@ -1,97 +1,74 @@
-.chat-container {
+.app-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  align-items: center;
+  font-family: Arial, sans-serif;
 }
 
-.chat-header {
-  padding: 10px;
-  background-color: #f1f1f1;
-  text-align: center;
+.users-conversations {
+  display: flex;
   width: 100%;
-  box-sizing: border-box;
+  justify-content: space-around;
+  margin-bottom: 20px;
 }
 
-.main-content {
-  display: flex;
-  flex: 1;
-  height: calc(100% - 60px); /* Adjust this value to match the height of your chat-header */
+.users-conversations div {
+  width: 45%;
 }
 
-.user-list {
-  width: 25%;
-  padding: 10px;
-  background-color: #f9f9f9;
-  border-right: 1px solid #ccc;
-  box-sizing: border-box;
-  overflow-y: auto;
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
-.list-title {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.user-item {
-  padding: 5px;
+li {
+  padding: 8px;
   cursor: pointer;
+  border: 1px solid #ddd;
+  margin-bottom: 5px;
 }
 
-.user-item:hover {
-  background-color: #ddd;
+li:hover {
+  background-color: #f0f0f0;
 }
 
-.mfa-button {
-  margin-top: 20px;
+.chat-container {
+  width: 60%;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 5px;
 }
 
-.conversation-window {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-.conversation-header {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.conversation-content {
-  flex: 1;
+.messages-box {
+  max-height: 300px;
   overflow-y: auto;
+  border: 1px solid #ddd;
   padding: 10px;
-  border: 1px solid #ccc;
+  margin-bottom: 10px;
+  border-radius: 5px;
 }
 
-.conversation-input {
+.input-box {
   display: flex;
 }
 
-.conversation-input input {
+input[type="text"] {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-right: none;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-right: 10px;
 }
 
-.conversation-input button {
-  padding: 10px;
-  background-color: #4CAF50;
+button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #007bff;
   color: white;
-  border: 1px solid #4CAF50;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-.conversation-input button:hover {
-  background-color: #45a049;
-}
-
-.my-message {
-  text-align: right;
-}
-
-.their-message {
-  text-align: left;
+button:hover {
+  background-color: #0056b3;
 }

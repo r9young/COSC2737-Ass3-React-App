@@ -48,8 +48,6 @@ function App() {
     }
   };
 
-
-  
   const handleOtpSubmit = async (otp) => {
     try {
       const response = await axios.post(`${base_url.replace(/\/$/, "")}/api/verify-otp`, {

@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
-import './Chat.css'; // Import the CSS file for styling
 
 const socket = io('http://13.54.65.192:4000'); // Ensure this matches your server URL and port
 
-const Chat = () => {
+const App = () => {
   const [users, setUsers] = useState([]);
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-
-  // Get userId and username from local storage
-  const userId = localStorage.getItem('userId');
-  const username = localStorage.getItem('username');
+  const [userId] = useState('60d0fe4f5311236168a109cb'); // Replace with the actual logged-in user ID
 
   useEffect(() => {
     // Fetch users
@@ -116,43 +112,38 @@ const Chat = () => {
   };
 
   return (
-    <div className="app-container">
+    <div>
       <h1>Chat App</h1>
-      <div className="username-display">
-        Logged in as: <strong>{username}</strong>
+      <div>
+        <h2>Users</h2>
+        <ul>
+          {users.map(user => (
+            <li key={user._id} onClick={() => selectUser(user)}>
+              {user.username}
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="users-conversations">
-        <div>
-          <h2>Users</h2>
-          <ul>
-            {users.filter(user => user._id !== userId).map(user => (
-              <li key={user._id} onClick={() => selectUser(user)}>
-                {user.username}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h2>Conversations</h2>
-          <ul>
-            {conversations.map(conv => (
-              <li key={conv._id} onClick={() => selectConversation(conv._id)}>
-                Conversation with {conv.participants.filter(p => p !== userId).map(p => getUserById(p)).join(', ')}
-              </li>
-            ))}
-          </ul>
-        </div>
+      <div>
+        <h2>Conversations</h2>
+        <ul>
+          {conversations.map(conv => (
+            <li key={conv._id} onClick={() => selectConversation(conv._id)}>
+              Conversation with {conv.participants.filter(p => p !== userId).map(p => getUserById(p)).join(', ')}
+            </li>
+          ))}
+        </ul>
       </div>
-      <div className="chat-container">
+      <div>
         <h2>Chat</h2>
         {selectedConversation && (
           <>
-            <div className="messages-box">
+            <div>
               {messages.map((msg, index) => (
                 <p key={index}><strong>{getUserById(msg.senderId)}</strong>: {msg.text}</p>
               ))}
             </div>
-            <div className="input-box">
+            <div>
               <input
                 type="text"
                 value={message}
@@ -168,4 +159,4 @@ const Chat = () => {
   );
 };
 
-export default Chat;
+export default App;

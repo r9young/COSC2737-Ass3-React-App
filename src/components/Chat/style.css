@@ -1,27 +1,44 @@
 .chat-container {
   display: flex;
+  flex-direction: column;
   height: 100vh;
+}
+
+.chat-header {
+  padding: 10px;
+  background-color: #f1f1f1;
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  height: calc(100% - 60px); /* Adjust this value to match the height of your chat-header */
 }
 
 .user-list {
   width: 25%;
+  padding: 10px;
+  background-color: #f9f9f9;
   border-right: 1px solid #ccc;
-  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .list-title {
-  font-size: 1.2em;
+  font-weight: bold;
   margin-bottom: 10px;
 }
 
 .user-item {
+  padding: 5px;
   cursor: pointer;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
 }
 
 .user-item:hover {
-  background-color: #f1f1f1;
+  background-color: #ddd;
 }
 
 .mfa-button {
@@ -29,37 +46,23 @@
 }
 
 .conversation-window {
-  width: 75%;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .conversation-header {
-  font-size: 1.2em;
+  font-weight: bold;
   margin-bottom: 10px;
 }
 
 .conversation-content {
-  flex-grow: 1;
-  border: 1px solid #ccc;
-  padding: 10px;
+  flex: 1;
   overflow-y: auto;
-}
-
-.my-message, .their-message {
   padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-
-.my-message {
-  background-color: #e1ffc7;
-  align-self: flex-end;
-}
-
-.their-message {
-  background-color: #f1f1f1;
+  border: 1px solid #ccc;
 }
 
 .conversation-input {
@@ -67,23 +70,28 @@
 }
 
 .conversation-input input {
-  flex-grow: 1;
+  flex: 1;
   padding: 10px;
   border: 1px solid #ccc;
   border-right: none;
-  border-radius: 5px 0 0 5px;
 }
 
 .conversation-input button {
   padding: 10px;
-  border: 1px solid #ccc;
-  border-left: none;
-  background-color: #4caf50;
+  background-color: #4CAF50;
   color: white;
-  border-radius: 0 5px 5px 0;
+  border: 1px solid #4CAF50;
   cursor: pointer;
 }
 
 .conversation-input button:hover {
   background-color: #45a049;
+}
+
+.my-message {
+  text-align: right;
+}
+
+.their-message {
+  text-align: left;
 }

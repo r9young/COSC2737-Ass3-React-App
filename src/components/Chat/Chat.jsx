@@ -10,26 +10,40 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [conversationId, setConversationId] = useState(null);
+  const [userDetails, setUserDetails] = useState({ _id: '', firstname: '', lastname: '' });
 
-  const userId = localStorage.getItem('userId');
+  const username = localStorage.getItem('username');
   const socketRef = useRef();
 
   useEffect(() => {
-    if (!userId) {
-      console.error('User ID is not set in localStorage');
+    if (!username) {
+      console.error('Username is not set in localStorage');
       return;
     }
+
+    const fetchUserDetails = async () => {
+      try {
+        const response = await axios.get(`http://13.54.65.192:4000/getUserByUsername/${username}`);
+        console.log('User details fetched:', response.data);
+        setUserDetails(response.data);
+      } catch (error) {
+        console.error('Error fetching user details:', error);
+      }
+    };
 
     const fetchUsers = async () => {
       try {
         const response = await axios.get('http://13.54.65.192:4000/getUser');
         console.log('Users fetched:', response.data);
-        setUsers(response.data);
+        // Filter out the current user from the list of users
+        const filteredUsers = response.data.filter(user => user.username !== username);
+        setUsers(filteredUsers);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
     };
 
+    fetchUserDetails();
     fetchUsers();
 
     socketRef.current = io('http://13.54.65.192:4000');
@@ -45,10 +59,11 @@ const Chat = () => {
     return () => {
       socketRef.current.disconnect();
     };
-  }, [userId]);
+  }, [username]);
 
   const startConversation = async (user) => {
     console.log('User clicked:', user);
+    const userId = userDetails._id;
     if (!userId || !user._id) {
       console.error('User ID is null');
       return;
@@ -59,8 +74,7 @@ const Chat = () => {
       const response = await axios.post('http://13.54.65.192:4000/api/conversations', {
         participants: [userId, user._id]
       });
-      const newConversationId = response.data.conversationId; // Ensure we get the conversation ID
-      console.log('New conversation ID:', newConversationId); // Log the new conversation ID
+      const newConversationId = response.data.conversationId;
       setConversationId(newConversationId);
       fetchMessages(newConversationId);
       socketRef.current.emit('joinRoom', newConversationId);
@@ -88,10 +102,10 @@ const Chat = () => {
 
     try {
       await axios.post(`http://13.54.65.192:4000/api/conversations/${conversationId}/messages`, {
-        senderId: userId,
+        senderId: userDetails._id,
         text: newMessage
       });
-      socketRef.current.emit('sendMessage', { conversationId, senderId: userId, text: newMessage });
+      socketRef.current.emit('sendMessage', { conversationId, senderId: userDetails._id, text: newMessage });
       setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
@@ -100,46 +114,51 @@ const Chat = () => {
 
   return (
     <div className="chat-container">
-      <div className="user-list">
-        <p className="list-title">Friend's List</p>
-        {users.map((user) => (
-          <div
-            key={user._id}
-            className="user-item"
-            onClick={() => startConversation(user)}
-          >
-            {user.firstname} {user.lastname}
-          </div>
-        ))}
-        <div className="mfa-button">
-          <Link to="/mfa">
-            <button>
-              Enable MFA
-            </button>
-          </Link>
-        </div>
+      <div className="chat-header">
+        <h2>Welcome, {userDetails.firstname} {userDetails.lastname}!</h2>
       </div>
-      <div className="conversation-window">
-        <div className="conversation-header">
-          <p className="header-title">You are currently talking to:</p>
-          {selectedUser ? `${selectedUser.firstname} ${selectedUser.lastname}` : 'Select a user to chat'}
-        </div>
-        <div className="conversation-content">
-          {messages.map((msg, index) => (
-            <div key={index} className={msg.senderId === userId ? 'my-message' : 'their-message'}>
-              <div>{msg.senderId === userId ? 'You' : selectedUser ? selectedUser.firstname : 'Unknown'}</div>
-              <p>{msg.text}</p>
+      <div className="main-content">
+        <div className="user-list">
+          <p className="list-title">Friend's List</p>
+          {users.map((user) => (
+            <div
+              key={user._id}
+              className="user-item"
+              onClick={() => startConversation(user)}
+            >
+              {user.firstname} {user.lastname}
             </div>
           ))}
+          <div className="mfa-button">
+            <Link to="/mfa">
+              <button>
+                Enable MFA
+              </button>
+            </Link>
+          </div>
         </div>
-        <div className="conversation-input">
-          <input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type your message here"
-          />
-          <button onClick={sendMessage}>Send</button>
+        <div className="conversation-window">
+          <div className="conversation-header">
+            <p className="header-title">You are currently talking to:</p>
+            {selectedUser ? `${selectedUser.firstname} ${selectedUser.lastname}` : 'Select a user to chat'}
+          </div>
+          <div className="conversation-content">
+            {messages.map((msg, index) => (
+              <div key={index} className={msg.senderId === userDetails._id ? 'my-message' : 'their-message'}>
+                <div>{msg.senderId === userDetails._id ? 'You' : selectedUser ? selectedUser.firstname : 'Unknown'}</div>
+                <p>{msg.text}</p>
+              </div>
+            ))}
+          </div>
+          <div className="conversation-input">
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+              placeholder="Type your message here"
+            />
+            <button onClick={sendMessage}>Send</button>
+          </div>
         </div>
       </div>
     </div>
@@ -147,3 +166,4 @@ const Chat = () => {
 };
 
 export default Chat;
+

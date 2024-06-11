@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
-import './style.css'; // Import the CSS file for styling
+import './Chat.css'; // Import the CSS file for styling
 
 const socket = io('http://13.54.65.192:4000'); // Ensure this matches your server URL and port
 
@@ -11,7 +11,10 @@ const Chat = () => {
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
-  const [userId] = useState('60d0fe4f5311236168a109cb'); // Replace with the actual logged-in user ID
+
+  // Get userId and username from local storage
+  const userId = localStorage.getItem('userId');
+  const username = localStorage.getItem('username');
 
   useEffect(() => {
     // Fetch users
@@ -115,11 +118,14 @@ const Chat = () => {
   return (
     <div className="app-container">
       <h1>Chat App</h1>
+      <div className="username-display">
+        Logged in as: <strong>{username}</strong>
+      </div>
       <div className="users-conversations">
         <div>
           <h2>Users</h2>
           <ul>
-            {users.map(user => (
+            {users.filter(user => user._id !== userId).map(user => (
               <li key={user._id} onClick={() => selectUser(user)}>
                 {user.username}
               </li>
@@ -163,4 +169,3 @@ const Chat = () => {
 };
 
 export default Chat;
-

@@ -5,6 +5,10 @@
   font-family: Arial, sans-serif;
 }
 
+.username-display {
+  margin-bottom: 20px;
+}
+
 .users-conversations {
   display: flex;
   width: 100%;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Route, Routes, Link, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Home from './components/Home';
 import Register from './components/Register/Register';
@@ -12,10 +12,7 @@ import PasswordReset from './components/Reset_Password/Reset_Password';
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [loginData, setLoginData] = useState({
-    username: '',
-    password: ''
-  });
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
   const [loginError, setLoginError] = useState('');
   const [mfaSecret, setMfaSecret] = useState(null);
 
@@ -32,21 +29,21 @@ function App() {
     event.preventDefault();
     try {
       const response = await axios.post(`${base_url.replace(/\/$/, "")}/api/login`, loginData);
-      console.log('Login response:', response.data); // Log the server response
+      console.log('Login response:', response.data);
       if (response.data.success) {
-        localStorage.setItem('userId', response.data.userId); // Store the userId
-        localStorage.setItem('username', loginData.username); // Store the username
-        setMfaSecret(response.data.mfaSecret || null); // Set MFA secret if available
-        console.log('MFA Secret:', response.data.mfaSecret); // Log MFA secret
+        localStorage.setItem('userId', response.data.userId);
+        localStorage.setItem('username', loginData.username);
+        setMfaSecret(response.data.mfaSecret || null);
+        console.log('MFA Secret:', response.data.mfaSecret);
         if (!response.data.mfaSecret) {
-          navigate('/chat'); // Redirect to the chat page if MFA is not required
+          navigate('/chat');
         }
       } else {
-        setLoginError('Invalid username or password'); // Display error message if login fails
+        setLoginError('Invalid username or password');
       }
     } catch (error) {
       console.error('Error logging in:', error);
-      setLoginError('An error occurred during login'); // Display error message if there is an issue with the request
+      setLoginError('An error occurred during login');
     }
   };
 
@@ -56,15 +53,15 @@ function App() {
         otp,
         userId: localStorage.getItem('userId')
       });
-      console.log('OTP response:', response.data); // Log the OTP verification response
+      console.log('OTP response:', response.data);
       if (response.data.success) {
-        navigate('/chat'); // Redirect to chat page after successful OTP verification
+        navigate('/chat');
       } else {
-        setLoginError('Invalid OTP'); // Display error message if OTP verification fails
+        setLoginError('Invalid OTP');
       }
     } catch (error) {
       console.error('Error verifying OTP:', error);
-      setLoginError('An error occurred during OTP verification'); // Display error message if there is an issue with the request
+      setLoginError('An error occurred during OTP verification');
     }
   };
 
@@ -143,8 +140,8 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/MFA" element={<MFA />} />
-            <Route path="/password-reset-request" element={<PasswordResetRequest />} /> {/* Add the new route */}
-            <Route path="/reset-password" element={<PasswordReset />} /> {/* Add the new route */}
+            <Route path="/password-reset-request" element={<PasswordResetRequest />} />
+            <Route path="/reset-password" element={<PasswordReset />} />
           </Routes>
         )}
       </div>
@@ -153,3 +150,5 @@ function App() {
 }
 
 export default App;
+
+

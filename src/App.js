@@ -4,8 +4,10 @@ import axios from 'axios';
 import Home from './components/Home';
 import Register from './components/Register/Register';
 import Chat from './components/Chat/Chat';
-import MFA from './components/MFA/MFA'; // Import the MFA component
+import MFA from './components/MFA/MFA';
 import OTPInput from './components/OTPInput/OTPInput';
+import PasswordResetRequest from './components/PassReqRest/PassReqRest';
+import PasswordReset from './components/Reset_Password/Reset_Password';
 
 function App() {
   const location = useLocation();
@@ -15,7 +17,7 @@ function App() {
     password: ''
   });
   const [loginError, setLoginError] = useState('');
-  const [mfaSecret, setMfaSecret] = useState(null); // State for MFA Secret
+  const [mfaSecret, setMfaSecret] = useState(null);
 
   const base_url = process.env.REACT_APP_NODE_ENV === 'development'
     ? process.env.REACT_APP_LOCAL_BASE_URL
@@ -122,11 +124,13 @@ function App() {
                     Sign In
                   </label>
                 </button>
-                <button className="button">
-                  <label className="primary" htmlFor="input-1">
-                    Reset Forget Password
-                  </label>
-                </button>
+                <Link to="/password-reset-request">
+                  <button className="button" type="button">
+                    <label className="primary" htmlFor="input-1">
+                      Reset Forget Password
+                    </label>
+                  </button>
+                </Link>
               </form>
             ) : (
               <OTPInput onSubmit={handleOtpSubmit} />
@@ -139,9 +143,10 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/MFA" element={<MFA />} />
+            <Route path="/password-reset-request" element={<PasswordResetRequest />} /> {/* Add the new route */}
+            <Route path="/reset-password" element={<PasswordReset />} /> {/* Add the new route */}
           </Routes>
         )}
-        {/* <div className="text-wrapper-4">Welcome to Easy Chat</div> */}
       </div>
     </div>
   );

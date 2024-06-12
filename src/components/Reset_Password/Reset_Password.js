@@ -14,7 +14,6 @@ const PasswordReset = () => {
     ? process.env.REACT_APP_LOCAL_BASE_URL
     : process.env.REACT_APP_SERVER_BASE_URL;
 
-  // Extract the token from the URL
   const searchParams = new URLSearchParams(location.search);
   const token = searchParams.get('token');
 
@@ -31,12 +30,8 @@ const PasswordReset = () => {
     try {
       const response = await axios.post(`${base_url.replace(/\/$/, "")}/reset-password`, { password, token });
       console.log('Password reset response:', response.data);
-      setMessage('Password has been reset successfully. You will be redirected to the login page shortly.');
-      
-      // Redirect to login page after a short delay
-      setTimeout(() => {
-        navigate('/login');
-      }, 3000); // Adjust the delay as needed
+      setMessage('Password has been reset successfully');
+      navigate('/login'); // Redirect to login page after successful reset
     } catch (error) {
       console.error('Error resetting password:', error);
       setMessage('An error occurred. Please try again later.');

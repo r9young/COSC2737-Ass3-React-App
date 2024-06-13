@@ -1,64 +1,162 @@
-import DetailsCardComponent from "./components/DetailsCardComponent";
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link, useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Home from './components/Home';
+import Register from './components/Register/Register';
+import Chat from './components/Chat/Chat';
+import MFA from './components/MFA/MFA';
+import OTPInput from './components/OTPInput/OTPInput';
+import PasswordResetRequest from './components/PassReqRest/PassReqRest';
+import PasswordReset from './components/Reset_Password/Reset_Password';
 
 function App() {
-  const [formData, setFormData] = useState({ name: "", email: "" });
-  const [recordData, setRecordData] = useState([]);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [loginData, setLoginData] = useState({ username: '', password: '' });
+  const [loginError, setLoginError] = useState('');
+  const [mfaSecret, setMfaSecret] = useState(null);
 
-  console.log("process.env:", process.env);
-  console.log("process.env.REACT_APP_NODE_ENV:", process.env.REACT_APP_NODE_ENV);
-  console.log("process.env.REACT_APP_SERVER_BASE_URL:", process.env.REACT_APP_SERVER_BASE_URL);
-  const base_url = process.env.REACT_APP_NODE_ENV === 'development' ? process.env.REACT_APP_LOCAL_BASE_URL : process.env.REACT_APP_SERVER_BASE_URL;
+  const base_url = process.env.REACT_APP_NODE_ENV === 'development'
+    ? process.env.REACT_APP_LOCAL_BASE_URL
+    : process.env.REACT_APP_SERVER_BASE_URL;
+
+  const handleLoginChange = (event) => {
+    const { name, value } = event.target;
+    setLoginData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleLoginSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axios.post(`${base_url.replace(/\/$/, "")}/api/login`, loginData);
+      console.log('Login response:', response.data);
+      if (response.data.success) {
+        localStorage.setItem('userId', response.data.userId);
+        localStorage.setItem('username', loginData.username);
+        setMfaSecret(response.data.mfaSecret || null);
+        console.log('MFA Secret:', response.data.mfaSecret);
+        if (!response.data.mfaSecret) {
+          navigate('/chat');
+        }
+      } else {
+        setLoginError('Invalid username or password');
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      setLoginError('An error occurred during login');
+    }
+  };
+
+  const handleOtpSubmit = async (otp) => {
+    try {
+      const response = await axios.post(`${base_url.replace(/\/$/, "")}/api/verify-otp`, {
+        otp,
+        userId: localStorage.getItem('userId')
+      });
+      console.log('OTP response:', response.data);
+      if (response.data.success) {
+        navigate('/chat');
+      } else {
+        setLoginError('Invalid OTP');
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      setLoginError('An error occurred during OTP verification');
+    }
+  };
 
   useEffect(() => {
-   axios.get(`${base_url}/getUsers`).then(res => { setRecordData(res.data) }).catch(err => alert(`Some error occured ==>${err}`));
-  }, []);
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }));
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    axios.post(`${base_url}/addUser`, formData).then(res => { setFormData({ name: "", email: "" }); alert("User created successfully") }).catch(err => alert(`Some error occured ==>${err}`));
-  };
+    console.log('Current MFA Secret state:', mfaSecret);
+  }, [mfaSecret]);
 
   return (
-    <div className="App">
-      <nav className="navbar navbar-light bg-light mb-2">
-        <a class="navbar-brand" href="https://www.youtube.com/@IntegrationNinjas">
-          <img src="./logo_p.png" width="50" height="50" class="d-inline-block" alt="" />
-          Integration Ninja
-        </a>
-      </nav>
-      <div className='container'>
-        <div className="row">
-          <div className="col">
-            <h3 className="text-center">Users List</h3>
-            <ul>
-              {recordData.map((r, i) => <tl key={i}><DetailsCardComponent email={r.email} sn={i+1} userN={r.name} /></tl>)}
-            </ul>
-          </div>
-          <div className="col">
-            <h2>Add Users</h2>
-            <form onSubmit={handleSubmit}>
-              <div className="form-group">
-                <label for="exampleInputUser">User Name</label>
-                <input type="text" name="name" className="form-control" id="exampleInputUser" value={formData.name} onChange={handleChange} placeholder="Enter user name" />
+    <div className="auth">
+      <div className="div">
+        {location.pathname === '/' && (
+          <div className="content">
+            <div className="copy">
+              <div className="divider">
+                <div className="rectangle" />
+                <div className="text-wrapper">Welcome to Easy Talk</div>
+                <div className="rectangle" />
               </div>
-              <div className="form-group">
-                <label for="exampleInputEmail">Email</label>
-                <input type="email" name="email" className="form-control" id="exampleInputEmail" value={formData.email} onChange={handleChange} placeholder="Enter email" />
+            </div>
+            <div className="copy">
+              <div className="divider">
+                <div className="rectangle" />
+                <div className="text-wrapper">Create a New Account</div>
+                <div className="rectangle" />
               </div>
-              <button type="submit" className="btn btn-primary mt-2">Submit</button>
-            </form>
+            </div>
+            <div className="input-and-button">
+              <Link to="/register">
+                <button clas sName="button">
+                  <label className="primary" htmlFor="input-1">
+                    Sign Up Your Account Here
+                  </label>
+                </button>
+              </Link>
+            </div>
+            
+            <div className="divider">
+              <div className="rectangle" />
+              <div className="text-wrapper">Sign In</div>
+              <div className="rectangle" />
+            </div>
+            {!mfaSecret ? (
+              <form onSubmit={handleLoginSubmit} className="input-and-button">
+                <input
+                  className="field"
+                  id="input-1"
+                  placeholder="username"
+                  type="text"
+                  name="username"
+                  value={loginData.username}
+                  onChange={handleLoginChange}
+                />
+                <input
+                  className="field"
+                  id="input-2"
+                  placeholder="password"
+                  type="password"
+                  name="password"
+                  value={loginData.password}
+                  onChange={handleLoginChange}
+                />
+                {loginError && <p style={{ color: 'red' }}>{loginError}</p>}
+                <button className="button" type="submit">
+                  <label className="primary" htmlFor="input-1">
+                    Sign In
+                  </label>
+                </button>
+                <Link to="/password-reset-request">
+                  <button className="button" type="button">
+                    <label className="primary" htmlFor="input-1">
+                      Reset Forget Password
+                    </label>
+                  </button>
+                </Link>
+              </form>
+            ) : (
+              <OTPInput onSubmit={handleOtpSubmit} />
+            )}
           </div>
-        </div>
+        )}
+        {location.pathname !== '/' && (
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/MFA" element={<MFA />} />
+            <Route path="/password-reset-request" element={<PasswordResetRequest />} />
+            <Route path="/reset-password" element={<PasswordReset />} />
+          </Routes>
+        )}
       </div>
     </div>
   );
 }
 
 export default App;
+
+

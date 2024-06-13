@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
 
-const socket = io('http://13.54.65.192:4000'); // Ensure this matches your server URL and port
+const socket = io('http://3.27.231.121:4000'); // Ensure this matches your server URL and port
 
 const App = () => {
   const [users, setUsers] = useState([]);
@@ -14,7 +14,7 @@ const App = () => {
 
   useEffect(() => {
     // Fetch users
-    axios.get('http://13.54.65.192:4000/getUser')
+    axios.get('http://3.27.231.121:4000/getUser')
       .then(response => {
         console.log('Users fetched:', response.data); // Debug log
         setUsers(response.data);
@@ -24,7 +24,7 @@ const App = () => {
       });
 
     // Fetch conversations
-    axios.get('http://13.54.65.192:4000/api/conversations')
+    axios.get('http://3.27.231.121:4000/api/conversations')
       .then(response => {
         console.log('Conversations fetched:', response.data); // Debug log
         setConversations(response.data.conversations);
@@ -58,7 +58,7 @@ const App = () => {
   const selectUser = (user) => {
     console.log('User selected:', user); // Debug log
     // Create or fetch conversation with the selected user
-    axios.post('http://13.54.65.192:4000/api/conversations', { participants: [userId, user._id] })
+    axios.post('http://3.27.231.121:4000/api/conversations', { participants: [userId, user._id] })
       .then(response => {
         const conversationId = response.data.conversationId;
         setSelectedConversation(conversationId);
@@ -71,7 +71,7 @@ const App = () => {
   };
 
   const fetchMessages = (conversationId) => {
-    axios.get(`http://13.54.65.192:4000/api/conversations/${conversationId}/messages`)
+    axios.get(`http://3.27.231.121:4000/api/conversations/${conversationId}/messages`)
       .then(response => {
         console.log('Messages fetched:', response.data.messages); // Debug log
         setMessages(response.data.messages);
@@ -92,7 +92,7 @@ const App = () => {
       text: message
     };
 
-    axios.post(`http://13.54.65.192:4000/api/conversations/${selectedConversation}/messages`, newMessage)
+    axios.post(`http://3.27.231.121:4000/api/conversations/${selectedConversation}/messages`, newMessage)
       .then(() => {
         socket.emit('sendMessage', {
           conversationId: selectedConversation,

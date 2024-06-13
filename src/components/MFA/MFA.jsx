@@ -6,7 +6,7 @@ const EnableMFA = () => {
 
   const enableMFA = async () => {
     try {
-      const response = await fetch('http://13.54.65.192:4000/enable-mfa', {
+      const response = await fetch('http://3.27.231.121:4000/enable-mfa', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

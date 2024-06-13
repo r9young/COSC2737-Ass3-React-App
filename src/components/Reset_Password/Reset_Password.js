@@ -10,7 +10,7 @@ const PasswordReset = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://13.54.65.192:4000/reset-password', {
+      const response = await axios.post('http://3.27.231.121:4000/reset-password', {
         code,
         password,
       });

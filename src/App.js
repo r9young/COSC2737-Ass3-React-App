@@ -77,19 +77,27 @@ function App() {
             <div className="copy">
               <div className="divider">
                 <div className="rectangle" />
+                <div className="text-wrapper">Welcome to Easy Talk</div>
+                <div className="rectangle" />
+              </div>
+            </div>
+            <div className="copy">
+              <div className="divider">
+                <div className="rectangle" />
                 <div className="text-wrapper">Create a New Account</div>
                 <div className="rectangle" />
               </div>
             </div>
             <div className="input-and-button">
               <Link to="/register">
-                <button className="button">
+                <button clas sName="button">
                   <label className="primary" htmlFor="input-1">
                     Sign Up Your Account Here
                   </label>
                 </button>
               </Link>
             </div>
+            
             <div className="divider">
               <div className="rectangle" />
               <div className="text-wrapper">Sign In</div>

@@ -79,12 +79,6 @@ function App() {
 
   return (
     <div className="App">
-      <nav className="navbar navbar-light bg-light mb-2">
-        <a className="navbar-brand" href="https://www.youtube.com/@IntegrationNinjas">
-          <img src="./logo_p.png" width="50" height="50" className="d-inline-block" alt="" />
-          Easy Talk
-        </a>
-      </nav>
       <div className='container'>
         <div className="row">
           <div className="col">

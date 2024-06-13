@@ -95,10 +95,13 @@
   width: 400px;
 }
 
+
+
+
 .auth .button {
   all: unset;
   align-items: center;
-  background-color: #000000;
+  background-color: #000000; /* Changed to black */
   border-radius: 8px;
   box-sizing: border-box;
   display: flex;
@@ -108,10 +111,11 @@
   padding: 0px 16px;
   position: relative;
   width: 400px;
+  color: #ffffff; /* Ensure text color is white for contrast */
 }
 
-.auth .primary {
-  color: #ffffff;
+.auth .button .primary {
+  color: #ffffff; /* Ensure text color is white for contrast */
   font-family: var(--small-text-font-family);
   font-size: var(--small-text-font-size);
   font-style: var(--small-text-font-style);
@@ -159,7 +163,7 @@
 .auth .button-2 {
   all: unset;
   align-self: stretch;
-  background-color: #eeeeee;
+  background-color:black;
   border-radius: 8px;
   box-sizing: border-box;
   height: 40px;
@@ -222,4 +226,26 @@
   position: absolute;
   top: 23px;
   white-space: nowrap;
+}
+
+
+@media (max-width: 600px) {
+  .auth .div {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+  }
+
+  .auth .content {
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    width: 100%;
+  }
+
+  .auth .field,
+  .auth .button,
+  .auth .button-2 {
+    width: 100%;
+  }
 }

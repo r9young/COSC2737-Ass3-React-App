@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import './PassReqRest.css';
 
 const PasswordResetRequest = () => {
   const [username, setUsername] = useState('');
   const [message, setMessage] = useState('');
+  const navigate = useNavigate();
+  
   const base_url = process.env.REACT_APP_NODE_ENV === 'development'
     ? process.env.REACT_APP_LOCAL_BASE_URL
     : process.env.REACT_APP_SERVER_BASE_URL;
@@ -30,7 +34,7 @@ const PasswordResetRequest = () => {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Enter your username"
+          placeholder="enter email address"
           value={username}
           onChange={handleUsernameChange}
           required
@@ -38,6 +42,9 @@ const PasswordResetRequest = () => {
         <button type="submit">Request Password Reset</button>
       </form>
       {message && <p>{message}</p>}
+      <a href="https://mailtrap.io/" target="_blank" rel="noopener noreferrer">Link for MailTrap</a>
+      <button onClick={() => navigate('/reset-password')}>Go to Reset Password</button>
+      <p>For testing purposes, I used the mail testing function in Mailtrap. I have included the username and password in my report.</p>
     </div>
   );
 };

@@ -1,33 +1,72 @@
+body {
+  color: white;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
 .app-container {
+  background-color: black;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  height: 100vh;
 }
 
 .username-display {
   margin-bottom: 20px;
 }
 
-.users-conversations {
+.users-chat {
   display: flex;
   justify-content: space-between;
   width: 80%;
+  height: 100%;
 }
 
-.users-conversations > div {
-  width: 45%;
+.users-list {
+  width: 30%;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: black;
+}
+
+.users-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.users-list li {
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  margin-bottom: 5px;
+  border-radius: 5px;
+  color: white; /* Ensure text color is white */
+}
+
+.users-list li.selected {
+  background-color: #d3d3d3;
+  font-weight: bold;
+  color: black; /* Ensure selected text color is black for contrast */
 }
 
 .chat-container {
-  width: 80%;
-  margin-top: 20px;
+  width: 65%;
+  padding: 10px;
+  background-color: black;
+  color: white;
 }
 
 .messages-box {
   border: 1px solid #ccc;
   padding: 10px;
-  height: 300px;
+  height: 70%;
   overflow-y: scroll;
+  background-color: white; /* Ensure message box has a white background for readability */
+  color: black; /* Ensure message text color is black */
 }
 
 .input-box {
@@ -39,9 +78,45 @@
 input[type="text"] {
   width: 80%;
   padding: 10px;
+  background-color: white; /* Ensure input box has a white background */
+  color: black; /* Ensure input text color is black */
 }
 
 button {
-  width: 18%;
+  width: 45%;
   padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
+
+.mfa-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.mfa-button:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+  .users-chat {
+    flex-direction: column;
+  }
+
+  .users-list, .chat-container {
+    width: 100%;
+  }
+
+  .chat-container {
+    margin-top: 20px;
+  }
+}
+

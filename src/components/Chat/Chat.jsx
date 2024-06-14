@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { io } from 'socket.io-client';
+import { useNavigate } from 'react-router-dom';
+import './Chat.css'; // Ensure you have this CSS file imported
 
 const socket = io('http://3.27.231.121:4000'); // Ensure this matches your server URL and port
 
 const App = () => {
   const [users, setUsers] = useState([]);
-  const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
   const [message, setMessage] = useState('');
   const [userId] = useState('60d0fe4f5311236168a109cb'); // Replace with the actual logged-in user ID
+  const [username, setUsername] = useState(''); // State for the username
+  const navigate = useNavigate(); // Use the navigate hook
 
   useEffect(() => {
     // Fetch users
@@ -18,19 +21,13 @@ const App = () => {
       .then(response => {
         console.log('Users fetched:', response.data); // Debug log
         setUsers(response.data);
+
+        // Assuming the user ID is unique and we can find the username from the fetched users
+        const currentUser = response.data.find(user => user._id === userId);
+        setUsername(currentUser ? currentUser.username : 'Unknown User');
       })
       .catch(error => {
         console.error('Error fetching users:', error);
-      });
-
-    // Fetch conversations
-    axios.get('http://3.27.231.121:4000/api/conversations')
-      .then(response => {
-        console.log('Conversations fetched:', response.data); // Debug log
-        setConversations(response.data.conversations);
-      })
-      .catch(error => {
-        console.error('Error fetching conversations:', error);
       });
 
     // Socket event listeners
@@ -48,7 +45,7 @@ const App = () => {
       socket.off('newMessage');
       socket.off('messages');
     };
-  }, []);
+  }, [userId]);
 
   const getUserById = (id) => {
     const user = users.find(user => user._id === id);
@@ -61,7 +58,7 @@ const App = () => {
     axios.post('http://3.27.231.121:4000/api/conversations', { participants: [userId, user._id] })
       .then(response => {
         const conversationId = response.data.conversationId;
-        setSelectedConversation(conversationId);
+        setSelectedConversation({ _id: conversationId, participants: [userId, user._id] });
         socket.emit('joinRoom', conversationId);
         fetchMessages(conversationId);
       })
@@ -92,10 +89,10 @@ const App = () => {
       text: message
     };
 
-    axios.post(`http://3.27.231.121:4000/api/conversations/${selectedConversation}/messages`, newMessage)
+    axios.post(`http://3.27.231.121:4000/api/conversations/${selectedConversation._id}/messages`, newMessage)
       .then(() => {
         socket.emit('sendMessage', {
-          conversationId: selectedConversation,
+          conversationId: selectedConversation._id,
           ...newMessage
         });
         setMessage('');
@@ -105,55 +102,53 @@ const App = () => {
       });
   };
 
-  const selectConversation = (conversationId) => {
-    setSelectedConversation(conversationId);
-    socket.emit('joinRoom', conversationId);
-    fetchMessages(conversationId);
+  const handleEnableMFA = () => {
+    navigate('/mfa');
   };
 
   return (
-    <div>
-      <h1>Chat App</h1>
-      <div>
-        <h2>Users</h2>
-        <ul>
-          {users.map(user => (
-            <li key={user._id} onClick={() => selectUser(user)}>
-              {user.username}
-            </li>
-          ))}
-        </ul>
+    <div className="app-container">
+      <h1>Easy Chat</h1>
+      <div className="username-display">
+        <p>Logged in as: {username}</p>
       </div>
-      <div>
-        <h2>Conversations</h2>
-        <ul>
-          {conversations.map(conv => (
-            <li key={conv._id} onClick={() => selectConversation(conv._id)}>
-              Conversation with {conv.participants.filter(p => p !== userId).map(p => getUserById(p)).join(', ')}
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h2>Chat</h2>
-        {selectedConversation && (
-          <>
-            <div>
-              {messages.map((msg, index) => (
-                <p key={index}><strong>{getUserById(msg.senderId)}</strong>: {msg.text}</p>
-              ))}
-            </div>
-            <div>
-              <input
-                type="text"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Type your message here"
-              />
-              <button onClick={sendMessage}>Send</button>
-            </div>
-          </>
-        )}
+      <div className="users-chat">
+        <div className="users-list">
+          <h2>Users</h2>
+          <ul>
+            {users.map(user => (
+              <li
+                key={user._id}
+                className={selectedConversation && selectedConversation.participants.includes(user._id) ? 'selected' : ''}
+                onClick={() => selectUser(user)}
+              >
+                {user.username}
+              </li>
+            ))}
+          </ul>
+          <button onClick={handleEnableMFA} className="mfa-button">Enable MFA</button>
+        </div>
+        <div className="chat-container">
+          <h2>Chat</h2>
+          {selectedConversation && (
+            <>
+              <div className="messages-box">
+                {messages.map((msg, index) => (
+                  <p key={index}><strong>{getUserById(msg.senderId)}</strong>: {msg.text}</p>
+                ))}
+              </div>
+              <div className="input-box">
+                <input
+                  type="text"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  placeholder="Type your message here"
+                />
+                <button onClick={sendMessage}>Send</button>
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );

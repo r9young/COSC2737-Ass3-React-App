@@ -76,3 +76,5 @@ mongodb+srv://r9young777:R5EG8b3scPaDQbvH@devcluster.cxbhzdm.mongodb.net/?retryW
 
 
 old: 13.54.65.192
+
+./run.sh

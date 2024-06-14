@@ -1,0 +1,49 @@
+.password-reset-request {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .password-reset-request h1 {
+    margin-bottom: 20px;
+  }
+  
+  .password-reset-request form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .password-reset-request form input,
+  .password-reset-request form button {
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  .password-reset-request a,
+  .password-reset-request button {
+    margin-bottom: 10px;
+  }
+  
+  .password-reset-request p {
+    margin-top: 20px;
+  }
+  
+  @media (max-width: 600px) {
+    .password-reset-request {
+      padding: 10px;
+    }
+  
+    .password-reset-request form input,
+    .password-reset-request form button {
+      width: 100%;
+    }
+  }
+  

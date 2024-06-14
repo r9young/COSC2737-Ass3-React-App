@@ -9,6 +9,8 @@ import OTPInput from './components/OTPInput/OTPInput';
 import PasswordResetRequest from './components/PassReqRest/PassReqRest';
 import PasswordReset from './components/Reset_Password/Reset_Password';
 
+
+
 function App() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -90,7 +92,7 @@ function App() {
             </div>
             <div className="input-and-button">
               <Link to="/register">
-                <button clas sName="button">
+                <button className="button">
                   <label className="primary" htmlFor="input-1">
                     Sign Up Your Account Here
                   </label>
@@ -158,5 +160,3 @@ function App() {
 }
 
 export default App;
-
-

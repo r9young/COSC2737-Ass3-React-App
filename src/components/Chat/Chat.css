@@ -1,9 +1,9 @@
-body {
+/* body {
   color: white;
   margin: 0;
   padding: 0;
   font-family: Arial, sans-serif;
-}
+} */
 
 .app-container {
   background-color: black;
@@ -15,7 +15,13 @@ body {
 }
 
 .username-display {
+  color:white;
   margin-bottom: 20px;
+}
+
+
+.heading {
+  color: white;
 }
 
 .users-chat {
@@ -94,6 +100,7 @@ button {
 
 .mfa-button {
   margin-top: 20px;
+  width: 100%;
   padding: 10px 20px;
   cursor: pointer;
   background-color: #007bff;

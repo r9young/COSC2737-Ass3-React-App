@@ -108,13 +108,13 @@ const App = () => {
 
   return (
     <div className="app-container">
-      <h1>Easy Chat</h1>
+      <h1 className="heading">Easy Chat</h1>
       <div className="username-display">
         <p>Logged in as: {username}</p>
       </div>
       <div className="users-chat">
         <div className="users-list">
-          <h2>Users</h2>
+          <h2 className="heading">Users</h2>
           <ul>
             {users.map(user => (
               <li
